@@ -9,7 +9,9 @@ namespace eroxia
 {
     internal interface ILogic
     {
+        bool DeleteProduct(int productId);
         public List<Employee> GetAllEmployees();
         public List<Product> GetAllProducts();
+        bool InsertProduct(Product product);
     }
 }

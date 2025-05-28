@@ -55,5 +55,28 @@ namespace eroxia
             }
             return Products;
         }
+
+        public bool DeleteProduct(int productId)
+        {
+            var result = Storage.DeleteProductFromDB(productId).Result;
+            if (result)
+            {
+               Products?.RemoveAll(p => p.ProductId == productId);
+               
+            }
+            return result;
+        }
+
+        public bool InsertProduct(Product product)
+        {
+            var resultId = Storage.InsertProductToDB(product).Result;
+            if (resultId > 0)
+            {
+                product.ProductId = resultId;
+                Products?.Add(product);
+                return true;
+            }
+            return false;
+        }
     }
 }

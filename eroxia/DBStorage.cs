@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace eroxia
 {
-    
-    internal class DBStorage: IStorage
+
+    internal class DBStorage : IStorage
     {
         public static string postgresConnectionString = "Host=localhost;Port=5432;Database=eroxia;Username=postgres;Password=superpippo;";
 
@@ -28,8 +28,9 @@ namespace eroxia
 
             var products = new List<Product>();
 
-            while (reader.Read()) {
-                
+            while (reader.Read())
+            {
+
                 var product = new Product(
                     reader.GetInt32(0), // ProductId
                     reader.GetString(1), // Name
@@ -44,7 +45,7 @@ namespace eroxia
 
             }
 
-            return products;    
+            return products;
         }
 
 
@@ -80,5 +81,83 @@ namespace eroxia
             return employees;
         }
 
+        public async Task<bool> DeleteProductFromDB(int productId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgresConnectionString);
+
+            using var dataSource = dataSourceBuilder.Build();
+
+            using var conn = await dataSource.OpenConnectionAsync();
+
+            var queryString = @"BEGIN;
+
+                                 DELETE FROM purchase_product WHERE id_product = @productId;
+
+                                 DELETE FROM product  WHERE id_product = @productId;
+                                 COMMIT;
+                                 ";
+
+            using var query = new NpgsqlCommand(queryString, conn);
+            query.Parameters.AddWithValue("productId", productId);
+
+            var result = await query.ExecuteNonQueryAsync();
+
+            if (result > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+
+
+
+        }
+
+        public async Task<int> InsertProductToDB(Product product)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgresConnectionString);
+
+            using var dataSource = dataSourceBuilder.Build();
+
+            using var conn = await dataSource.OpenConnectionAsync();
+
+            var queryString = @"INSERT INTO product (name, manufacturer, price, material, color)
+                                VALUES (@name, @manufacturer, @price, @material, @color)
+                                RETURNING id_product";
+
+            using var query = new NpgsqlCommand(queryString, conn);
+
+            query.Parameters.AddWithValue("name", product.Name);
+            query.Parameters.AddWithValue("manufacturer", product.Manufacturer);
+            query.Parameters.AddWithValue("price", product.Price);
+            query.Parameters.AddWithValue("material", String.IsNullOrEmpty(product.Material) ? DBNull.Value : product.Material);
+            query.Parameters.AddWithValue("color", String.IsNullOrEmpty(product.Color) ? DBNull.Value : product.Color);
+
+
+            object? resultId = null;
+            try
+            {
+                resultId = await query.ExecuteScalarAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("An error occurred while inserting the product into the database.");
+                throw;
+            }
+            
+
+            if (resultId != null && int.TryParse(resultId.ToString(), out int productId))
+            {
+                return productId;
+            }
+            else
+            {
+                throw new Exception("Failed to insert product into the database.");
+            }
+        }
     }
+
 }

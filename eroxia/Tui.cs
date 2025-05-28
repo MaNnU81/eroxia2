@@ -52,12 +52,62 @@ namespace eroxia
 
         private void InsertProduct()
         {
-            throw new NotImplementedException();
+          Console.Write("Enter Product Name: ");
+            var name = Console.ReadLine();
+            Console.Write("Enter Manufacturer: ");
+            var manufacturer = Console.ReadLine();
+            Console.Write("Enter Price: (optional)");
+            var priceInput = Console.ReadLine();
+            decimal price;
+            if (!decimal.TryParse(priceInput, out price))
+            {
+                Console.WriteLine("Invalid price format.");
+                return;
+            }
+            Console.Write("Enter Material (optional): ");
+            var material = Console.ReadLine();
+            Console.Write("Enter Color (optional): ");
+            var color = Console.ReadLine();
+            var product = new model.Product(name, manufacturer, price)
+            {
+                Material = string.IsNullOrEmpty(material) ? null : material,
+                Color = string.IsNullOrEmpty(color) ? null : color
+            };
+
+            Console.WriteLine($"Product inserted: {product}");
+
+            var success = Logic.InsertProduct(product);
+            if (success)
+            {
+                Console.WriteLine($"Product '{name}' inserted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Failed to insert product.");
+            }
+
         }
 
         private void DeleteProduct()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter the Product ID to delete: ");
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out int productId))
+            {
+                var success = Logic.DeleteProduct(productId);
+                if (success)
+                {
+                    Console.WriteLine("Product  deleted successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Product not found or could not be deleted.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Product ID.");
+            }
         }
 
         private void ViewAllProducts()
