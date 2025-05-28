@@ -22,7 +22,9 @@ namespace eroxia
                 Console.WriteLine("Please select an option:");
                 Console.WriteLine("1. View all employees");
                 Console.WriteLine("2. View all products");
-                Console.WriteLine("3. Exit");
+                Console.WriteLine("3. Insert product");
+                Console.WriteLine("4. Delete product");
+                Console.WriteLine("5. Exit");
                 var choice = Console.ReadLine();
                 switch (choice)
                 {
@@ -33,6 +35,12 @@ namespace eroxia
                         ViewAllProducts();
                         break;
                     case "3":
+                        InsertProduct();
+                        break;
+                    case "4":
+                        DeleteProduct();
+                        break;
+                    case "5":
                         Console.WriteLine("Exiting... Goodbye!");
                         return;
                     default:
@@ -42,14 +50,31 @@ namespace eroxia
             }
         }
 
-        private void ViewAllProducts()
+        private void InsertProduct()
         {
             throw new NotImplementedException();
         }
 
-        private void ViewAllEmployees()
+        private void DeleteProduct()
         {
             throw new NotImplementedException();
+        }
+
+        private void ViewAllProducts()
+        {
+            var products = Logic.GetAllProducts();
+            foreach (var prod in products)
+            {
+                Console.WriteLine(prod.ToString());
+            }
+        }
+
+        private void ViewAllEmployees()
+        {
+            var employees = Logic.GetAllEmployees();
+            foreach (var employee in employees) { 
+                Console.WriteLine(employee.ToString());
+            }
         }
     }
 }

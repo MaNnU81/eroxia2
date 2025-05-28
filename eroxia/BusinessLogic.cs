@@ -12,22 +12,48 @@ namespace eroxia
     {
         private IStorage Storage { get; set; }
 
-        private List<Employee> Employees { get; set; }
-        private List<Product> Products { get; set; }
+        private List<Employee>? Employees { get; set; }
+        private List<Product>? Products { get; set; }
 
         public BusinessLogic(IStorage storage)
         {
             Storage = storage;
         }
 
-        public async Task<List<Employee>> GetAllEmployeesAsync()
+        public  List<Employee> GetAllEmployees()
         {
-            throw new NotImplementedException();
+            if (Employees == null)
+            {
+                try
+                {
+                    Employees = Storage.GetAllEmployeesFromDB().Result;
+                }
+                catch (Exception ex)
+                {
+
+                    Employees = new List<Employee>();
+
+                }
+            }
+            return Employees;
         }
 
-        public async Task<List<Product>> GetAllProductsAsync()
+        public List<Product> GetAllProducts()
         {
-            throw new NotImplementedException();
+            if (Products == null)
+            {
+                try
+                {
+                    Products = Storage.GetAllProductsFromDB().Result;
+                }
+                catch (Exception ex)
+                {
+
+                    Products = new List<Product>();
+
+                }
+            }
+            return Products;
         }
     }
 }

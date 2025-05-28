@@ -9,7 +9,7 @@ namespace eroxia
 {
     internal interface ILogic
     {
-        public Task<List<Employee>> GetAllEmployeesAsync();
-        public Task<List<Product>> GetAllProductsAsync();
+        public List<Employee> GetAllEmployees();
+        public List<Product> GetAllProducts();
     }
 }

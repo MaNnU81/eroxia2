@@ -22,5 +22,10 @@ namespace eroxia.model
             Manufacturer = manufacturer;
             Price = price;
         }
+
+        public override string? ToString()
+        {
+            return $"{ProductId} - {Name} ({Manufacturer}) - {Price:C}";
+        }
     }
 }
