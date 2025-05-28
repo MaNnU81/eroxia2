@@ -11,7 +11,7 @@ namespace eroxia
 
     internal class DBStorage : IStorage
     {
-        public static string postgresConnectionString = "Host=localhost;Port=5432;Database=eroxia;Username=postgres;Password=superpippo;";
+        public static string postgresConnectionString = "Host=localhost;Port=5432;Database=eroxia;Username=postgres;Password=Diva;";
 
         public async Task<List<Product>> GetAllProductsFromDB()
         {
@@ -147,7 +147,7 @@ namespace eroxia
                 Console.WriteLine("An error occurred while inserting the product into the database.");
                 throw;
             }
-            
+
 
             if (resultId != null && int.TryParse(resultId.ToString(), out int productId))
             {
@@ -159,37 +159,31 @@ namespace eroxia
             }
         }
 
-        public async Task<List<Client>> GetAllCustomersFromDB()   //da aggiornare 
+        public async Task<List<Client>> GetAllCustomersFromDB()
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgresConnectionString);
 
             using var dataSource = dataSourceBuilder.Build();
-
             using var conn = await dataSource.OpenConnectionAsync();
-
             using var query = new NpgsqlCommand("SELECT fiscal_code, fiscal_code_employee, name, surname, address FROM client", conn);
-
             using var reader = query.ExecuteReader();
 
             var customers = new List<Client>();
 
             while (reader.Read())
             {
-
                 var customer = new Client(
                     reader.GetString(0),
-                    reader.GetString(1),
+                    reader.IsDBNull(1) ? null : reader.GetString(1),
                     reader.GetString(2),
                     reader.GetString(3),
                     reader.GetString(4)
                 );
 
                 customers.Add(customer);
-
             }
 
             return customers;
-
         }
     }
 
