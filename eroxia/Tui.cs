@@ -25,7 +25,9 @@ namespace eroxia
                 Console.WriteLine("3. Insert product");
                 Console.WriteLine("4. Delete product"); 
                 Console.WriteLine("5. View all customers of given employee");
-                Console.WriteLine("6. Exit");
+                Console.WriteLine("6. The best employee");
+
+                Console.WriteLine("7. Exit");
                 var choice = Console.ReadLine();
                 switch (choice)
                 {
@@ -45,6 +47,9 @@ namespace eroxia
                         ViewAllCustomers();
                         break;
                     case "6":
+                        BestEmployee();
+                        break;
+                    case "7":
                         Console.WriteLine("Exiting... Goodbye!");
                         return;
                     default:
@@ -54,7 +59,7 @@ namespace eroxia
             }
         }
 
-     
+
 
         private void InsertProduct()
         {
@@ -140,6 +145,15 @@ namespace eroxia
             foreach (var customer  in customers)
             {
                 Console.WriteLine(customer.ToString());
+            }
+        }
+
+        private void BestEmployee()
+        {
+            var employees = Logic.GetBestEmployee();
+            foreach (var employee in employees)
+            {
+                Console.WriteLine(employee.ToString());
             }
         }
     }

@@ -94,5 +94,23 @@ namespace eroxia
             }
             return Customers;
         }
+
+        public List<Employee> GetBestEmployee()
+        {
+            if (Employees == null)
+            {
+                try
+                {
+                    Employees = Storage.GetBestEmployeesFromDB().Result;
+                }
+                catch (Exception ex)
+                {
+
+                    Employees = new List<Employee>();
+
+                }
+            }
+            return Employees;
+        }
     }
 }

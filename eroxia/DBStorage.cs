@@ -185,6 +185,39 @@ namespace eroxia
 
             return customers;
         }
+
+     
+
+        public async Task<List<Employee>> GetBestEmployeesFromDB()  //manca query corretta, ora esegue la stessa di GetAllEmployeesFromDB
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgresConnectionString);
+
+            using var dataSource = dataSourceBuilder.Build();
+
+            using var conn = await dataSource.OpenConnectionAsync();
+
+            using var query = new NpgsqlCommand("SELECT fiscal_code, name, surname, dob FROM employee", conn);
+
+            using var reader = query.ExecuteReader();
+
+            var employees = new List<Employee>();
+
+            while (reader.Read())
+            {
+
+                var employee = new Employee(
+                    reader.GetString(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetDateTime(3)
+                );
+
+                employees.Add(employee);
+
+            }
+
+            return employees;
+        }
     }
 
 }

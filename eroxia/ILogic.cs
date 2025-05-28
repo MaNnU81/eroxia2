@@ -13,6 +13,7 @@ namespace eroxia
         public List<Client> GetAllCustomers();
         public List<Employee> GetAllEmployees();
         public List<Product> GetAllProducts();
+        public List<Employee> GetBestEmployee();
         bool InsertProduct(Product product);
     }
 }
