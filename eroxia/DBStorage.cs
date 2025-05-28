@@ -158,6 +158,39 @@ namespace eroxia
                 throw new Exception("Failed to insert product into the database.");
             }
         }
+
+        public async Task<List<Client>> GetAllCustomersFromDB()   //da aggiornare 
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgresConnectionString);
+
+            using var dataSource = dataSourceBuilder.Build();
+
+            using var conn = await dataSource.OpenConnectionAsync();
+
+            using var query = new NpgsqlCommand("SELECT fiscal_code, fiscal_code_employee, name, surname, address FROM client", conn);
+
+            using var reader = query.ExecuteReader();
+
+            var customers = new List<Client>();
+
+            while (reader.Read())
+            {
+
+                var customer = new Client(
+                    reader.GetString(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetString(3),
+                    reader.GetString(4)
+                );
+
+                customers.Add(customer);
+
+            }
+
+            return customers;
+
+        }
     }
 
 }

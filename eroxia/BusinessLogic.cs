@@ -14,7 +14,7 @@ namespace eroxia
 
         private List<Employee>? Employees { get; set; }
         private List<Product>? Products { get; set; }
-
+        private List<Client>? Customers { get; set; }
         public BusinessLogic(IStorage storage)
         {
             Storage = storage;
@@ -77,6 +77,22 @@ namespace eroxia
                 return true;
             }
             return false;
+        }
+
+        public List<Client> GetAllCustomers()
+        {
+            if (Customers == null)
+            {
+                try
+                {
+                    Customers = Storage.GetAllCustomersFromDB().Result;
+                }
+                catch (Exception ex)
+                {
+                    Customers = new List<Client>();
+                }
+            }
+            return Customers;
         }
     }
 }
